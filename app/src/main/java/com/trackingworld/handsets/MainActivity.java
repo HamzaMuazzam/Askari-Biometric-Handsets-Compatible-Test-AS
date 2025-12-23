@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
         fpm.SetContextHandler(this, mHandler);
         fpm.SetTimeOut(Constants.TIMEOUT_LONG);
         fpm.SetLastCheckLift(true);
+        checkCameraPermission();
     }
 
     @SuppressLint("HandlerLeak")
