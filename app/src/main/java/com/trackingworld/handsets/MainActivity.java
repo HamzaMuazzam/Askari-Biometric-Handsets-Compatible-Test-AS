@@ -44,10 +44,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -129,11 +126,9 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
                     break;
                 case Constants.FPM_PLACE:
                     tvFpStatu.setText("Place Finger");
-                    Toast.makeText(MainActivity.this, "Place Finger", Toast.LENGTH_SHORT).show();
                     break;
                 case Constants.FPM_LIFT:
                     tvFpStatu.setText("Lift Finger");
-                    Toast.makeText(MainActivity.this, "Lift Finger", Toast.LENGTH_SHORT).show();
                     break;
                 case Constants.FPM_GENCHAR: {
                     if (msg.arg1 == 1) {
@@ -145,19 +140,14 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
                                 case R.id.radio1:
                                     Log.d("data type", "type:" + ConversionsEx.getInstance().GetDataType(matdata));
                                     matstring = ConversionsEx.getInstance().ToAnsiIso(matdata, ConversionsEx.ANSI_378_2004, ConversionsEx.COORD_MIRRORV);
-                                    //Log.d("test", "handleMessage: Test "+ Base64.encodeToString(matdata,0));
-                                    //Log.d("test", "handleMessage: Test "+matstring);
                                     break;
                                 case R.id.radio2:
                                     matstring = ConversionsEx.getInstance().ToAnsiIso(matdata, ConversionsEx.ISO_19794_2005, ConversionsEx.COORD_MIRRORV);
-                                    //Log.d("test", "handleMessage: Test "+matstring);
                                     saveIsoBase64ToTxt(matstring);
-                                    copyToClipboard(matstring);
                                     uploadDataToWeb(matstring);
                                     break;
                                 case R.id.radio3:
                                     matstring = Base64.encodeToString(matdata, 0);
-                                    //matstring = ConversionsEx.getInstance().ToAnsiIso(matdata, ConversionsEx.ISO_19794_2005, ConversionsEx.COORD_MIRRORV);
                                     Log.d("test-matstring", "handleMessage: Test " + matstring);
                                     break;
                             }
@@ -212,8 +202,6 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
             @SuppressLint("NewApi")
             @Override
             public void onSubmit(String value) {
-//                Toast.makeText(MainActivity.this, "FPM_NEWIMAGE1", Toast.LENGTH_SHORT).show();
-
                 bmpsize = fpm.GetBmpImage(bmpdata);
                 Bitmap bm1 = BitmapFactory.decodeByteArray(bmpdata, 0, bmpsize);
                 String base64 = bm1 != null ? bitmapToBase64(bm1) : "";
@@ -222,7 +210,6 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
                         new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String value) {
-                                // Toast.makeText(MainActivity.this, "onBiometricCompletion", Toast.LENGTH_SHORT).show();
                                 Log.e("onBiometricCompletion", value);
                                 Log.d("ISO_DATA", "onBiometricCompletion: " + value);
                             }
@@ -284,15 +271,8 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.flush();
 
-//            Toast.makeText(this,
-//                    "Bitmap saved:\n" + file.getAbsolutePath(),
-//                    Toast.LENGTH_LONG).show();
-
         } catch (Exception e) {
             e.printStackTrace();
-//            Toast.makeText(this,
-//                    "Failed to save bitmap",
-//                    Toast.LENGTH_SHORT).show();
         } finally {
             try {
                 if (fos != null) fos.close();
@@ -301,19 +281,8 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
         }
     }
 
-    private void copyToClipboard(String text) {
-        ClipboardManager clipboard =
-                (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-
-        ClipData clip = ClipData.newPlainText("copied_text", text);
-        clipboard.setPrimaryClip(clip);
-
-//        Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show();
-    }
-
     @SuppressLint("NewApi")
     private void saveIsoBase64ToTxt(String isoBase64) {
-//        Toast.makeText(MainActivity.this, isoBase64, Toast.LENGTH_SHORT).show();
         try {
             String fileName = "finger_iso_" + System.currentTimeMillis() + ".txt";
             File file = new File(getExternalFilesDir(null), fileName);
@@ -326,7 +295,6 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
             Log.d("ISO_SAVE", "Saved at: " + file.getAbsolutePath());
 
         } catch (Exception e) {
-//            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -401,7 +369,6 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
                 if (fpm.GenerateTemplate(2)) {
                     worktype = 1;
                 } else {
-//					Toast.makeText(MainActivity.this, "Busy", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -412,7 +379,6 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
                 if (fpm.GenerateTemplate(1)) {
                     worktype = 0;
                 } else {
-//					Toast.makeText(MainActivity.this, "Busy", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -447,25 +413,6 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
 
         WebView.setWebContentsDebuggingEnabled(true);
 
-        // REQUIRED for HTTPS (Google, Cloudflare, etc.)
-//        webView.setWebViewClient(new WebViewClient() {
-//
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                return false;
-//            }
-//
-//            // OPTIONAL: ignore SSL errors (⚠️ only for testing)
-//            @Override
-//            public void onReceivedSslError(
-//                    WebView view,
-//                    SslErrorHandler handler,
-//                    SslError error
-//            ) {
-//                handler.proceed();
-//            }
-//        });
-
         // JS Bridge
         webView.addJavascriptInterface(new TWJSBridge(this, ""), "TWJSBridge");
 
@@ -473,6 +420,21 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
         WebView.enableSlowWholeDocumentDraw();
 
         webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+
+            // OPTIONAL: ignore SSL errors (⚠️ only for testing)
+            @Override
+            public void onReceivedSslError(
+                    WebView view,
+                    SslErrorHandler handler,
+                    SslError error
+            ) {
+                handler.proceed();
+            }
             @Override
             public void onReceivedError(
                     WebView view,
@@ -498,6 +460,7 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
                 Log.e("JS_CONSOLE", consoleMessage.message());
                 return true;
             }
+
         });
 
         settings.setDatabaseEnabled(true);
@@ -562,21 +525,6 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         startActivityForResult(intent, CAMERA_REQUEST);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                openCamera(false);
-            }
-        }
     }
 
     @Override
@@ -665,19 +613,14 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
     }
 
     public void onWebButtonClicked(@NonNull String buttonId) {
-//        Toast.makeText(this, "Button ID: " + buttonId, Toast.LENGTH_SHORT).show();
         Log.e("onWebButtonClicked", buttonId);
         if (buttonId.contains("FINGERPRINT")) {
             boolean generateTemplate = fpm.GenerateTemplate(1);
             Log.e("GenerateTemplate", "" + generateTemplate);
-
         } else if (buttonId.contains("FRONT_CAMERA")) {
-            Toast.makeText(this, "Opening Front Camera" + buttonId, Toast.LENGTH_SHORT).show();
             openCamera(true);
         } else if (buttonId.contains("BACK_CAMERA")) {
             openCamera(false);
-            Toast.makeText(this, "Opening Back Camera" + buttonId, Toast.LENGTH_SHORT).show();
-
         }
     }
 
