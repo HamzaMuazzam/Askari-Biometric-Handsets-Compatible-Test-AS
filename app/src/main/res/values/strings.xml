@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Askari Biometric</string>
+    <string name="action_settings">Settings</string>
+    <string name="btn_match">Match</string>
+
+
+
+    <string name="btn_enrol">Enrol</string>
+    <string name="btn_capture">Capure</string>
+
+    <string name="rd_text1">ANSI378-2004</string>
+    <string name="rd_text2">ISO19794-2005</string>
+    <string name="rd_text3">Default</string>
+
+    <string name="action_dir0">Default</string>
+    <string name="action_dir1">Mirror Vertically </string>
+    <string name="action_dir2">Mirror Horizontally</string>
+    <string name="action_dir3">Rotate 180</string>
+
+    <string name="action_test">Match Test</string>
+
+
+
+    <string name="tv_ready"></string>
+    <string name="tv_null"></string>
+</resources>
