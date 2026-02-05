@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -387,6 +389,16 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
         loadWebsite();
     }
 
+    private boolean isConnectedToWifi() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnected()
+                    && activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+        }
+        return false;
+    }
+
     @SuppressLint("NewApi")
     private void loadWebsite() {
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -466,11 +478,15 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
         settings.setDatabaseEnabled(true);
 
 
-        // Load URL
-        webView.loadUrl(
-                "https://mbibtest.askaribank.com.pk/AccountOpeningApp"
-//                "https://0a091af61f05.ngrok-free.app/"
-        );
+        // Load URL based on network type
+        String url;
+        if (isConnectedToWifi()) {
+//            url = "http://10.10.10.81:5173/login";
+            url = "https://plive.askaribank.com/AccountOpeningApp/";
+        } else {
+            url = "https://192.168.32.86/AccountOpeningApp/";
+        }
+        webView.loadUrl(url);
     }
 
     private void showProgress() {
