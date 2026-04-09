@@ -46,6 +46,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -482,7 +484,11 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
         String url;
         if (isConnectedToWifi()) {
 //            url = "http://10.10.10.81:5173/login";
-            url = "https://plive.askaribank.com/AccountOpeningApp/";
+            if (BuildCondfig.DEBUG) {
+                url = "https://mbibtest.askaribank.com.pk/AccountOpeningApp/login";
+            } else {
+                url = "https://plive.askaribank.com/AccountOpeningApp/";
+            }
         } else {
             url = "https://192.168.32.86/AccountOpeningApp/";
         }
@@ -633,6 +639,7 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
         if (buttonId.contains("FINGERPRINT")) {
             boolean generateTemplate = fpm.GenerateTemplate(1);
             Log.e("GenerateTemplate", "" + generateTemplate);
+            Toast.makeText(this, "GenerateTemplate:" + generateTemplate, Toast.LENGTH_SHORT).show();
         } else if (buttonId.contains("FRONT_CAMERA")) {
             openCamera(true);
         } else if (buttonId.contains("BACK_CAMERA")) {
