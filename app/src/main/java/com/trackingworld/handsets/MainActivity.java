@@ -483,12 +483,8 @@ public class MainActivity extends AppCompatActivity implements OnWebClickListene
         // Load URL based on network type
         String url;
         if (isConnectedToWifi()) {
-//            url = "http://10.10.10.81:5173/login";
-            if (BuildCondfig.DEBUG) {
-                url = "https://mbibtest.askaribank.com.pk/AccountOpeningApp/login";
-            } else {
+//                url = "https://mbibtest.askaribank.com.pk/AccountOpeningApp/login";
                 url = "https://plive.askaribank.com/AccountOpeningApp/";
-            }
         } else {
             url = "https://192.168.32.86/AccountOpeningApp/";
         }

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace 'com.trackingworld.handsets'
     compileSdkVersion 30
 
     defaultConfig {
@@ -10,6 +11,11 @@ android {
         versionCode 2
         versionName "2.0"
         multiDexEnabled true
+    }
+
+    lint {
+        // targetSdk 30 is intentional for legacy biometric handsets (app is not Play-distributed)
+        disable 'ExpiredTargetSdkVersion'
     }
 
     buildTypes {
